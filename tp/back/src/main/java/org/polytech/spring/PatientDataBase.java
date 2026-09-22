@@ -1,8 +1,16 @@
 package org.polytech.spring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PatientDataBase implements PatientStore {
     
-    public void save(Patient p){
+    private List<Patient> patients = new ArrayList<>();
+
+    @Override
+    public void savePatient(Patient p){
+        patients.add(p);
+        System.out.println("Le patient est bien enregistré");
 
     }
 }

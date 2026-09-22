@@ -8,4 +8,8 @@ public class PatientService {
         this.patientstore = patientstore;
     }
 
+    public void savePatient(Patient p){
+        patientstore.savePatient(p);
+    }
+
 }
