@@ -10,31 +10,53 @@ import org.springframework.web.bind.annotation.*;
 public class FilmController {
 
     private final FilmService service;
+    private final ActeurService acteurService;
 
-    public FilmController(FilmService service) {
+    public FilmController(FilmService service, ActeurService acteurService) {
         this.service = service;
+        this.acteurService = acteurService;
     }
 
     @GetMapping
-    public List<Film> tousLesFilms() {
+    public List<FilmDto> tousLesFilms() {
         return service.getFilms();
     }
 
     @GetMapping("/{id}")
-    public Film unFilm(@PathVariable("id") Long id) {
+    public FilmDto unFilm(@PathVariable("id") Long id) {
         return service.getFilm(id);
     }
 
     @PostMapping
-    public ResponseEntity<Film> ajouter(@RequestBody Film film) {
-        Film nouveauFilm = service.ajouterFilm(film);
+    public ResponseEntity<FilmDto> ajouter(@RequestBody FilmCreationDto film) {
+        FilmDto nouveauFilm = service.ajouterFilm(film);
         URI adresse = URI.create("/films/" + nouveauFilm.getId());
         return ResponseEntity.created(adresse).body(nouveauFilm);
     }
 
     @PutMapping("/{id}")
-    public Film modifier(@PathVariable("id") Long id, @RequestBody Film film) {
+    public FilmDto modifier(@PathVariable("id") Long id, @RequestBody FilmCreationDto film) {
         return service.modifierFilm(id, film);
+    }
+
+    @GetMapping("/{id}/acteurs")
+    public List<ActeurDto> acteursFilm(@PathVariable("id") Long id,
+            @RequestParam(name = "avecQuery", defaultValue = "false") boolean avecQuery) {
+        return acteurService.getActeursFilm(id, avecQuery);
+    }
+
+    @PutMapping("/{filmId}/acteurs/{acteurId}")
+    public ResponseEntity<Void> associer(@PathVariable("filmId") Long filmId,
+                                        @PathVariable("acteurId") Long acteurId) {
+        acteurService.associerActeur(filmId, acteurId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{filmId}/acteurs/{acteurId}")
+    public ResponseEntity<Void> dissocier(@PathVariable("filmId") Long filmId,
+                                         @PathVariable("acteurId") Long acteurId) {
+        acteurService.dissocierActeur(filmId, acteurId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

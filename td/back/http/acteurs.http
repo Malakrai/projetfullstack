@@ -1,0 +1,84 @@
+@baseUrl = http://localhost:8081
+
+### Executer les requetes dans l'ordre avec REST Client.
+### 1. Creer un film : 201
+# @name nouveauFilm
+POST {{baseUrl}}/films
+Content-Type: application/json
+
+{
+  "titre": "Blade Runner",
+  "realisateur": "Ridley Scott",
+  "dateSortie": "1982-06-25",
+  "genre": "SCIENCE_FICTION"
+}
+
+### 2. Creer un acteur : 201
+# @name nouvelActeur
+POST {{baseUrl}}/acteurs
+Content-Type: application/json
+
+{
+  "nom": "Ford",
+  "prenom": "Harrison"
+}
+
+### 3. Lister les acteurs : 200
+GET {{baseUrl}}/acteurs
+
+### 4. Lire l'acteur : 200
+GET {{baseUrl}}/acteurs/{{nouvelActeur.response.body.$.id}}
+
+### 5. Modifier l'acteur : 200
+PUT {{baseUrl}}/acteurs/{{nouvelActeur.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "nom": "Ford",
+  "prenom": "Harrison"
+}
+
+### 6. Associer l'acteur au film : 204 (rejouable sans doublon)
+PUT {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs/{{nouvelActeur.response.body.$.id}}
+
+### 7. Acteurs du film par convention de nommage : 200
+GET {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs
+
+### 8. Acteurs du film avec @Query : meme resultat
+GET {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs?avecQuery=true
+
+### 9. Films de l'acteur par convention de nommage : 200
+GET {{baseUrl}}/acteurs/{{nouvelActeur.response.body.$.id}}/films
+
+### 10. Films de l'acteur avec @Query : meme resultat
+GET {{baseUrl}}/acteurs/{{nouvelActeur.response.body.$.id}}/films?avecQuery=true
+
+### 11. Dissocier : 204 (ne supprime ni le film ni l'acteur)
+DELETE {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs/{{nouvelActeur.response.body.$.id}}
+
+### 12. Verifier la dissociation : []
+GET {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs
+
+### 13. Verifier l'autre sens : []
+GET {{baseUrl}}/acteurs/{{nouvelActeur.response.body.$.id}}/films
+
+### 14. Reassocier pour tester la suppression d'un acteur lie
+PUT {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs/{{nouvelActeur.response.body.$.id}}
+
+### 15. Supprimer l'acteur et ses liens : 204
+DELETE {{baseUrl}}/acteurs/{{nouvelActeur.response.body.$.id}}
+
+### 16. Le film existe toujours : 200
+GET {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}
+
+### 17. L'acteur n'existe plus : 404
+GET {{baseUrl}}/acteurs/{{nouvelActeur.response.body.$.id}}
+
+### 18. Nettoyer le film : 204
+DELETE {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}
+
+### 19. Preverification CORS : origine autorisee dans la reponse
+OPTIONS {{baseUrl}}/acteurs
+Origin: http://localhost:5173
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: Content-Type

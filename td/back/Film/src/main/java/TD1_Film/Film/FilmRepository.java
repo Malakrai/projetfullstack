@@ -1,50 +1,16 @@
 package TD1_Film.Film;
 
-import java.util.ArrayList;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.util.List;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class FilmRepository {
+public interface FilmRepository extends JpaRepository<Film, Long> {
 
-    
-    private final List<Film> films = new ArrayList<>();
-    private long prochainId = 1;
+    // Spring construit la requete a partir du nom de la methode.
+    List<Film> findByActeursId(Long acteurId);
 
-    public List<Film> findAll() {
-        return films;
-    }
-
-    public Film findById(Long id) {
-        for (Film film : films) {
-            if (film.getId().equals(id)) {
-                return film;
-            }
-        }
-        return null;
-    }
-
-    public void save(Film film) {
-        
-        film.setId(prochainId);
-        prochainId++;
-        films.add(film);
-    }
-
-    public void update(Long id, Film nouvellesInfos) {
-        Film film = findById(id);
-        if (film != null) {
-            film.setTitre(nouvellesInfos.getTitre());
-            film.setRealisateur(nouvellesInfos.getRealisateur());
-            film.setDateSortie(nouvellesInfos.getDateSortie());
-            film.setGenre(nouvellesInfos.getGenre());
-        }
-    }
-
-    public void deleteById(Long id) {
-        Film film = findById(id);
-        if (film != null) {
-            films.remove(film);
-        }
-    }
+    // La meme recherche, ecrite en JPQL avec les noms des classes et des champs.
+    @Query("select f from Film f join f.acteurs a where a.id = :acteurId")
+    List<Film> trouverFilmsParActeur(@Param("acteurId") Long acteurId);
 }
