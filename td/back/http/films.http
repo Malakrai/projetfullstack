@@ -1,13 +1,11 @@
-### Liste des films
-GET http://localhost:8080/films
-Accept: application/json
+@baseUrl = http://localhost:8081
 
-### Film identifié par son identifiant
-GET http://localhost:8080/films/1
-Accept: application/json
+### 1. Liste des films : 200 (vide au démarrage)
+GET {{baseUrl}}/films
 
-### Création — réponse attendue : 201 Created avec en-tête Location
-POST http://localhost:8080/films
+### 2. Ajouter un film : 201 avec un en-tête Location
+# @name creation
+POST {{baseUrl}}/films
 Content-Type: application/json
 
 {
@@ -17,28 +15,36 @@ Content-Type: application/json
   "genre": "SCIENCE_FICTION"
 }
 
-### Création invalide — réponse attendue : 400 au format ProblemDetail
-POST http://localhost:8080/films
+### 3. Lire le film créé : 200
+GET {{baseUrl}}/films/{{creation.response.body.$.id}}
+
+### 4. Modifier le film : 200
+PUT {{baseUrl}}/films/{{creation.response.body.$.id}}
 Content-Type: application/json
 
 {
-  "realisateur": "Sans titre"
-}
-
-### Mise à jour
-PUT http://localhost:8080/films/1
-Content-Type: application/json
-
-{
-  "titre": "Blade Runner",
+  "titre": "Blade Runner - version finale",
   "realisateur": "Ridley Scott",
   "dateSortie": "1982-06-25",
   "genre": "SCIENCE_FICTION"
 }
 
-### Suppression — réponse attendue : 204 No Content
-DELETE http://localhost:8080/films/1
+### 5. Supprimer le film : 204 sans contenu
+DELETE {{baseUrl}}/films/{{creation.response.body.$.id}}
 
-### Identifiant inconnu — réponse attendue : 404 au format ProblemDetail
-GET http://localhost:8080/films/9999
-Accept: application/json
+### 6. Lire un film inconnu : 404 avec ProblemDetail
+GET {{baseUrl}}/films/9999
+
+### 7. Modifier un film inconnu : 404 avec ProblemDetail
+PUT {{baseUrl}}/films/9999
+Content-Type: application/json
+
+{
+  "titre": "Film inconnu",
+  "realisateur": "Test",
+  "dateSortie": "2020-01-01",
+  "genre": "DRAME"
+}
+
+### 8. Supprimer un film inconnu : 404 avec ProblemDetail
+DELETE {{baseUrl}}/films/9999

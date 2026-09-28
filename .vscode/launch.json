@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "TD1 - Film",
+            "request": "launch",
+            "mainClass": "TD1_Film.Film.FilmApplication",
+            "projectName": "Film",
+            "vmArgs": "-Xms32m -Xmx256m",
+            "cwd": "${workspaceFolder}/td/back/Film",
+            "console": "integratedTerminal"
+        }
+    ]
+}

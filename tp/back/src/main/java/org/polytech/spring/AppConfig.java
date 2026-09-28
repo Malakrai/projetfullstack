@@ -1,9 +1,9 @@
 package org.polytech.spring;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+// Configuration manuelle utilisable avec AnnotationConfigApplicationContext.
+// Spring Boot utilise directement les classes @Service et @Repository.
 public class AppConfig {
 
     // AppConfig = la classe qui configure Spring et lui explique quels objets créer et comment les relier.
