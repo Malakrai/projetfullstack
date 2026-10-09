@@ -1,1 +1,31 @@
+### Objet Java converti en JSON par Jackson
 GET http://localhost:8080/hello
+Accept: application/json
+
+### XML : 406 Not Acceptable, car aucun convertisseur XML n'est configure
+GET http://localhost:8080/hello
+Accept: application/xml
+
+### Liste des patients : DTO sans relations (200 attendu)
+GET http://localhost:8080/patients
+
+### Recherche exacte par nom
+GET http://localhost:8080/patients?nom=Malak
+
+### Aucun resultat : liste vide, sans erreur de serialisation
+GET http://localhost:8080/patients?nom=Inconnu
+
+### Chargement classique
+GET http://localhost:8080/patients/1
+
+### Chargement avec JOIN FETCH
+GET http://localhost:8080/patients/1?avecMedecin=true
+
+### Creation sans identifiant : 201 et un PatientDto en reponse
+POST http://localhost:8080/patients
+Content-Type: application/json
+
+{
+  "nom": "Alice",
+  "age": 25
+}

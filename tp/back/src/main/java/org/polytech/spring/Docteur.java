@@ -1,45 +1,50 @@
 package org.polytech.spring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
-public class Patient {
+public class Docteur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nom;
-    private int age;
+    private String specialite;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "adresse_id")
     private Adresse adresse;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medecin_traitant_id")
-    private Docteur medecinTraitant;
+    @OneToMany
+    @JoinTable(name = "docteur_patients",
+        joinColumns = @JoinColumn(name = "docteur_id"),
+        inverseJoinColumns = @JoinColumn(name = "patient_id"))
+    private List<Patient> patients = new ArrayList<>();
 
-    public Patient() {
+    public Docteur() {
     }
 
-    public Patient(String nom, int age) {
+    public Docteur(String nom, String specialite) {
         this.nom = nom;
-        this.age = age;
+        this.specialite = specialite;
     }
 
     public Long getId() { return id; }
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
-    public int getAge() { return age; }
-    public void setAge(int age) { this.age = age; }
+    public String getSpecialite() { return specialite; }
+    public void setSpecialite(String specialite) { this.specialite = specialite; }
     public Adresse getAdresse() { return adresse; }
     public void setAdresse(Adresse adresse) { this.adresse = adresse; }
-    public Docteur getMedecinTraitant() { return medecinTraitant; }
-    public void setMedecinTraitant(Docteur medecinTraitant) { this.medecinTraitant = medecinTraitant; }
+    public List<Patient> getPatients() { return patients; }
 }
