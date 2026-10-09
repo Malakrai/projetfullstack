@@ -138,6 +138,30 @@ front/src/app/
 └── not-found/       la page affichée si l'URL n'existe pas
 ```
 
+## Ce que j'ai utilisé en plus du cours
+
+J'ai surtout utilisé ce qu'on a vu en cours, mais j'ai eu besoin de quelques trucs en plus :
+
+### Côté front
+
+- **`toObservable` + `switchMap`** : pour relancer la requête quand l'`id` de l'URL, la page ou le tri change (`toSignal` tout seul ne charge qu'une fois).
+- **`forkJoin`** : pour charger un acteur et ses films en même temps.
+- **`takeUntilDestroyed`** : pour que les `subscribe()` (ajout, modification, suppression) se ferment tout seuls quand on quitte la page.
+- **`HttpParams`** : pour mettre les paramètres de pagination dans l'URL.
+- **La locale française** (`LOCALE_ID` dans `app.config.ts`) : pour que les dates s'affichent en français.
+- **`window.confirm`** : pour demander confirmation avant de supprimer un film.
+- **`Omit<Film, ...>`** : comme `Partial`, mais pour enlever des champs (le formulaire n'envoie pas l'`id`).
+- **`as const`** : pour écrire la liste des genres une seule fois.
+- **`ngOnInit`** : pour charger le film à modifier au démarrage du formulaire.
+
+### Côté back
+
+- **`PageRequest` et `Sort`** : pour la pagination et le tri des acteurs (le cours en parle dans « pour aller plus loin »).
+- **L'entité `Role`** : une table `film_role` pour stocker le personnage joué. J'ai gardé le `@ManyToMany` existant pour ne rien casser.
+- **`deleteBy...`** : comme les `findBy...` du cours, mais pour supprimer les rôles quand on supprime un film ou un acteur.
+- **`@RequestBody(required = false)`** : le personnage est facultatif quand on associe un acteur.
+- **`ResponseStatusException`** : pour renvoyer une 404 si on modifie le rôle d'un acteur qui n'est pas dans le film.
+
 ## Les tags
 
 - `TD1` et `td2` : la partie back (API Spring, DTO, base de données)

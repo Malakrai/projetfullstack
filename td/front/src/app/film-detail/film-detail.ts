@@ -60,26 +60,19 @@ export class FilmDetail {
     return this.tousLesActeurs().filter(a => !associes.includes(a.id));
   });
 
-  recharger() {
-    this.rechargement.update(n => n + 1);
-  }
-
   associer({ acteurId, personnage }: SaisieRole) {
-    this.executer(this.service.associerActeur(this.filmId(), acteurId, personnage), 'Association impossible.', () =>
-      this.recharger(),
-    );
+    const requete = this.service.associerActeur(this.filmId(), acteurId, personnage);
+    this.executer(requete, 'Association impossible.');
   }
 
   modifierRole({ acteurId, personnage }: SaisieRole) {
-    this.executer(this.service.modifierRole(this.filmId(), acteurId, personnage), 'Modification du rôle impossible.', () =>
-      this.recharger(),
-    );
+    const requete = this.service.modifierRole(this.filmId(), acteurId, personnage);
+    this.executer(requete, 'Modification du rôle impossible.');
   }
 
   dissocier(acteur: Acteur) {
-    this.executer(this.service.dissocierActeur(this.filmId(), acteur.id), 'Dissociation impossible.', () =>
-      this.recharger(),
-    );
+    const requete = this.service.dissocierActeur(this.filmId(), acteur.id);
+    this.executer(requete, 'Dissociation impossible.');
   }
 
   onSupprimer() {
@@ -87,12 +80,12 @@ export class FilmDetail {
     if (!film || !window.confirm(`Supprimer le film « ${film.titre} » ?`)) {
       return;
     }
-    this.executer(this.service.supprimer(film.id), 'Suppression impossible.', () =>
-      this.router.navigate(['/films']),
-    );
+    this.executer(this.service.supprimer(film.id), 'Suppression impossible.', () => {
+      this.router.navigate(['/films']);
+    });
   }
 
-  private executer(requete: Observable<void>, messageErreur: string, suite: () => void) {
+  private executer(requete: Observable<void>, messageErreur: string, suite = () => this.recharger()) {
     if (this.actionEnCours()) {
       return;
     }
@@ -108,5 +101,9 @@ export class FilmDetail {
         this.actionEnCours.set(false);
       },
     });
+  }
+
+  private recharger() {
+    this.rechargement.update(n => n + 1);
   }
 }

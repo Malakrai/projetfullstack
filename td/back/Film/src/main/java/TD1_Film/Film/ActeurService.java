@@ -16,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 // Une transaction regroupe les lectures et les modifications de la relation.
 @Transactional
 public class ActeurService {
+    private static final Set<String> TRIS_AUTORISES = Set.of("id", "nom", "prenom");
+
     private final ActeurRepository repository;
     private final FilmRepository filmRepository;
     private final ActeurMapper mapper;
@@ -54,8 +56,6 @@ public class ActeurService {
         }
         return resultat;
     }
-
-    private static final Set<String> TRIS_AUTORISES = Set.of("id", "nom", "prenom");
 
     public PageDto<ActeurDto> getPageActeurs(int page, int taille, String tri, String sens) {
         String champ = TRIS_AUTORISES.contains(tri) ? tri : "nom";

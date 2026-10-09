@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Film } from './film.model';
-import { Acteur } from './acteur.model';
 
-export type FilmSaisie = Omit<Film, 'id' | 'acteurs'>;
+export type FilmSaisie = Omit<Film, 'id' | 'acteurs' | 'roles'>;
 
 @Injectable({ providedIn: 'root' })
 export class FilmService {
@@ -16,10 +15,6 @@ export class FilmService {
 
   getById(id: number) {
     return this.http.get<Film>(`${this.url}/${id}`);
-  }
-
-  getActeurs(id: number) {
-    return this.http.get<Acteur[]>(`${this.url}/${id}/acteurs`);
   }
 
   creer(film: FilmSaisie) {
