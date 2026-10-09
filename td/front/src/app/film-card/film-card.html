@@ -7,5 +7,5 @@
   </h3>
   <p>Réalisateur : {{ film().realisateur ?? 'inconnu' }}</p>
   <p>Sortie : {{ film().dateSortie ? (film().dateSortie | date: 'dd/MM/yyyy') : 'date inconnue' }}</p>
-  <button type="button" [disabled]="desactive()" (click)="onSupprimer()">Supprimer</button>
+  <button type="button" class="danger" [disabled]="desactive()" (click)="onSupprimer()">Supprimer</button>
 </article>

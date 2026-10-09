@@ -7,22 +7,34 @@
   line-height: 1.6;
 }
 
+h1 {
+  margin-bottom: 0;
+  color: var(--principal);
+}
+
 nav {
   display: flex;
   gap: 12px;
   margin: 24px 0;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--accent);
 }
 
 nav a {
   padding: 8px 16px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--bordure);
   border-radius: 6px;
-  color: #222;
+  background: var(--carte);
+  color: var(--principal);
   text-decoration: none;
 }
 
+nav a:hover {
+  border-color: var(--accent);
+}
+
 nav a.actif {
-  background: #174b7a;
-  border-color: #174b7a;
+  background: var(--principal);
+  border-color: var(--principal);
   color: white;
 }

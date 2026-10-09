@@ -18,7 +18,7 @@
       @for (acteur of film.acteurs; track acteur.id) {
         <li>
           <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.prenom }} {{ acteur.nom }}</a>
-          <button type="button" [disabled]="actionEnCours()" (click)="dissocier(acteur)">Dissocier</button>
+          <button type="button" class="danger" [disabled]="actionEnCours()" (click)="dissocier(acteur)">Dissocier</button>
         </li>
       } @empty {
         <li>Aucun acteur associé à ce film.</li>
@@ -40,7 +40,7 @@
 
     <p>
       <a [routerLink]="['/films', film.id, 'modifier']">Modifier</a>
-      <button type="button" [disabled]="actionEnCours()" (click)="onSupprimer()">Supprimer</button>
+      <button type="button" class="danger" [disabled]="actionEnCours()" (click)="onSupprimer()">Supprimer</button>
     </p>
   } @else {
     <p>Chargement du film...</p>

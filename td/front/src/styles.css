@@ -1,10 +1,81 @@
+:root {
+  --fond: #f5f3ff;
+  --carte: #ffffff;
+  --texte: #1e1b4b;
+  --texte-doux: #6b6890;
+  --principal: #6d28d9;
+  --principal-clair: #ede9fe;
+  --accent: #f472b6;
+  --danger: #e11d48;
+  --bordure: #ddd6fe;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+}
+
+h1,
+h2 {
+  color: var(--principal);
+}
+
+a {
+  color: var(--principal);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
 button {
   padding: 6px 12px;
+  border: 1px solid var(--principal);
+  border-radius: 6px;
+  background: var(--principal);
+  color: white;
+  font: inherit;
   cursor: pointer;
 }
 
+button:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
 button:disabled {
-  cursor: wait;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.danger {
+  border-color: var(--danger);
+  background: var(--danger);
+}
+
+input,
+select {
+  padding: 6px 8px;
+  border: 1px solid var(--bordure);
+  border-radius: 6px;
+  background: white;
+  color: var(--texte);
+  font: inherit;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+
+[role='alert'] {
+  padding: 8px 12px;
+  border-left: 4px solid var(--danger);
+  border-radius: 4px;
+  background: #ffe4e6;
+  color: var(--danger);
 }
 
 .entete {
@@ -18,25 +89,36 @@ button:disabled {
 table {
   border-collapse: collapse;
   min-width: 320px;
+  background: var(--carte);
 }
 
 th,
 td {
   padding: 6px 12px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--bordure);
   text-align: left;
+}
+
+th {
+  background: var(--principal-clair);
 }
 
 th button {
   padding: 0;
   border: none;
   background: none;
-  font: inherit;
+  color: var(--principal);
   font-weight: bold;
+}
+
+th button:hover:not(:disabled) {
+  background: none;
+  color: var(--accent);
 }
 
 .pagination {
   display: flex;
   gap: 12px;
   align-items: center;
+  color: var(--texte-doux);
 }

@@ -1,18 +1,20 @@
 article {
   margin: 16px 0;
   padding: 12px 16px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--bordure);
+  border-left: 6px solid var(--principal);
   border-radius: 6px;
+  background: var(--carte);
 }
 
 article.ancien {
-  border-left: 6px solid #8b6b3d;
-  background: #f6f0e4;
+  border-left-color: #d97706;
+  background: #fffbeb;
 }
 
 .mention {
   margin: 0 0 6px;
-  color: #8b6b3d;
+  color: #b45309;
   font-size: 0.85rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -24,6 +26,7 @@ h3 {
 
 p {
   margin: 4px 0;
+  color: var(--texte-doux);
 }
 
 button {
