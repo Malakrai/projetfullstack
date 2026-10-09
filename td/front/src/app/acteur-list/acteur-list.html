@@ -2,16 +2,41 @@
   <h2>Liste des acteurs</h2>
   @if (erreur()) {
     <p role="alert">{{ erreur() }}</p>
-  } @else if (acteurs(); as liste) {
-    <ul>
-      @for (acteur of liste; track acteur.id) {
-        <li>
-          <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.prenom }} {{ acteur.nom }}</a>
-        </li>
-      } @empty {
-        <li>Aucun acteur enregistré.</li>
-      }
-    </ul>
+  } @else if (resultat(); as r) {
+    <table>
+      <thead>
+        <tr>
+          <th><button type="button" (click)="trierPar('prenom')">Prénom{{ indicateur('prenom') }}</button></th>
+          <th><button type="button" (click)="trierPar('nom')">Nom{{ indicateur('nom') }}</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (acteur of r.contenu; track acteur.id) {
+          <tr>
+            <td>
+              <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.prenom }}</a>
+            </td>
+            <td>
+              <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.nom }}</a>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="2">Aucun acteur enregistré.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (r.totalPages > 1) {
+      <p class="pagination">
+        <button type="button" [disabled]="r.page === 0" (click)="page.set(r.page - 1)">← Précédent</button>
+        Page {{ r.page + 1 }} / {{ r.totalPages }} ({{ r.totalElements }} acteurs)
+        <button type="button" [disabled]="r.page + 1 >= r.totalPages" (click)="page.set(r.page + 1)">
+          Suivant →
+        </button>
+      </p>
+    }
   } @else {
     <p>Chargement des acteurs...</p>
   }

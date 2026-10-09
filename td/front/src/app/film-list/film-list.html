@@ -3,6 +3,10 @@
     <h2>Liste des films</h2>
     <a routerLink="/films/nouveau">Ajouter un film</a>
   </div>
+  <p>
+    <label for="recherche">Rechercher : </label>
+    <input id="recherche" type="search" placeholder="Titre ou réalisateur" [(ngModel)]="recherche" />
+  </p>
   @if (erreurSuppression()) {
     <p role="alert">{{ erreurSuppression() }}</p>
   }
@@ -11,7 +15,7 @@
   }
   @if (erreur()) {
     <p role="alert">{{ erreur() }}</p>
-  } @else if (films(); as liste) {
+  } @else if (filmsFiltres(); as liste) {
     @for (film of liste; track film.id) {
       <app-film-card
         [film]="film"
@@ -19,7 +23,11 @@
         (supprimer)="onSupprimer($event)"
       />
     } @empty {
-      <p>Aucun film enregistré.</p>
+      @if (recherche().trim()) {
+        <p>Aucun film ne correspond à « {{ recherche() }} ».</p>
+      } @else {
+        <p>Aucun film enregistré.</p>
+      }
     }
   } @else {
     <p>Chargement des films...</p>

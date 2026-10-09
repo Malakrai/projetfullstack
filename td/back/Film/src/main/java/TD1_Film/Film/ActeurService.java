@@ -3,6 +3,10 @@ package TD1_Film.Film;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +49,23 @@ public class ActeurService {
             resultat.add(mapper.toDto(acteur));
         }
         return resultat;
+    }
+
+    private static final Set<String> TRIS_AUTORISES = Set.of("id", "nom", "prenom");
+
+    public PageDto<ActeurDto> getPageActeurs(int page, int taille, String tri, String sens) {
+        String champ = TRIS_AUTORISES.contains(tri) ? tri : "nom";
+        Sort.Direction direction = "desc".equalsIgnoreCase(sens) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        int pageValide = Math.max(page, 0);
+        int tailleValide = Math.min(Math.max(taille, 1), 50);
+        Page<Acteur> resultat = repository.findAll(
+                PageRequest.of(pageValide, tailleValide, Sort.by(direction, champ).and(Sort.by("id"))));
+        List<ActeurDto> contenu = new ArrayList<>();
+        for (Acteur acteur : resultat.getContent()) {
+            contenu.add(mapper.toDto(acteur));
+        }
+        return new PageDto<>(contenu, resultat.getNumber(), resultat.getSize(),
+                resultat.getTotalElements(), resultat.getTotalPages());
     }
 
     public ActeurDto getActeur(Long id) {

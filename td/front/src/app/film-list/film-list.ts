@@ -5,10 +5,11 @@ import { FilmService } from '../film.service';
 import { Film } from '../film.model';
 import { FilmCard } from '../film-card/film-card';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-film-list',
-  imports: [FilmCard, RouterLink],
+  imports: [FilmCard, FormsModule, RouterLink],
   templateUrl: './film-list.html',
 })
 export class FilmList {
@@ -29,6 +30,15 @@ export class FilmList {
   films = computed(() =>
     this.filmsApi()?.filter(film => !this.idsSupprimes().includes(film.id)),
   );
+  recherche = signal('');
+  filmsFiltres = computed(() => {
+    const texte = this.recherche().trim().toLowerCase();
+    return this.films()?.filter(
+      film =>
+        film.titre.toLowerCase().includes(texte) ||
+        (film.realisateur ?? '').toLowerCase().includes(texte),
+    );
+  });
 
   onSupprimer(film: Film) {
     if (this.suppressionEnCours() || !window.confirm(`Supprimer le film « ${film.titre} » ?`)) {

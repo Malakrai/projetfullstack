@@ -14,3 +14,29 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
 }
+
+table {
+  border-collapse: collapse;
+  min-width: 320px;
+}
+
+th,
+td {
+  padding: 6px 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th button {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: bold;
+}
+
+.pagination {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}

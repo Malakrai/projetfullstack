@@ -19,6 +19,14 @@ public class ActeurController {
         return service.getActeurs();
     }
 
+    @GetMapping("/page")
+    public PageDto<ActeurDto> pageActeurs(@RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "taille", defaultValue = "5") int taille,
+            @RequestParam(name = "tri", defaultValue = "nom") String tri,
+            @RequestParam(name = "sens", defaultValue = "asc") String sens) {
+        return service.getPageActeurs(page, taille, tri, sens);
+    }
+
     @GetMapping("/{id}")
     public ActeurDto unActeur(@PathVariable("id") Long id) {
         return service.getActeur(id);
