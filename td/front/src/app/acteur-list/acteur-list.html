@@ -5,7 +5,9 @@
   } @else if (acteurs(); as liste) {
     <ul>
       @for (acteur of liste; track acteur.id) {
-        <li>{{ acteur.prenom }} {{ acteur.nom }}</li>
+        <li>
+          <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.prenom }} {{ acteur.nom }}</a>
+        </li>
       } @empty {
         <li>Aucun acteur enregistré.</li>
       }

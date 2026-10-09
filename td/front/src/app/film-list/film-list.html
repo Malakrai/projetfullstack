@@ -1,5 +1,8 @@
 <section>
-  <h2>Liste des films</h2>
+  <div class="entete">
+    <h2>Liste des films</h2>
+    <a routerLink="/films/nouveau">Ajouter un film</a>
+  </div>
   @if (erreurSuppression()) {
     <p role="alert">{{ erreurSuppression() }}</p>
   }
@@ -9,15 +12,15 @@
   @if (erreur()) {
     <p role="alert">{{ erreur() }}</p>
   } @else if (films(); as liste) {
-      @for (film of liste; track film.id) {
-          <app-film-card
-            [film]="film"
-            [desactive]="suppressionEnCours()"
-            (supprimer)="onSupprimer($event)"
-          />
-      } @empty {
-        <p>Aucun film enregistré.</p>
-      }
+    @for (film of liste; track film.id) {
+      <app-film-card
+        [film]="film"
+        [desactive]="suppressionEnCours()"
+        (supprimer)="onSupprimer($event)"
+      />
+    } @empty {
+      <p>Aucun film enregistré.</p>
+    }
   } @else {
     <p>Chargement des films...</p>
   }

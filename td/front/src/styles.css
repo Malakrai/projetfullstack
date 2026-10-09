@@ -1,0 +1,17 @@
+/* Feuille de style globale, volontairement sobre. */
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: wait;
+}
+
+.entete {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}

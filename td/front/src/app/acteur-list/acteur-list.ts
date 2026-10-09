@@ -1,10 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { ActeurService } from '../acteur.service';
 
 @Component({
   selector: 'app-acteur-list',
+  imports: [RouterLink],
   templateUrl: './acteur-list.html',
 })
 export class ActeurList {

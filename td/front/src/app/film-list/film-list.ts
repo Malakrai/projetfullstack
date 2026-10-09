@@ -4,10 +4,11 @@ import { catchError, of } from 'rxjs';
 import { FilmService } from '../film.service';
 import { Film } from '../film.model';
 import { FilmCard } from '../film-card/film-card';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-film-list',
-  imports: [FilmCard],
+  imports: [FilmCard, RouterLink],
   templateUrl: './film-list.html',
 })
 export class FilmList {

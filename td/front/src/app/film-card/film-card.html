@@ -1,7 +1,8 @@
 <article>
-  <h3>{{ film().titre }}</h3>
-  <p>Réalisateur : {{ film().realisateur }}</p>
-  <button type="button" [disabled]="desactive()" (click)="onSupprimer()">
-    Supprimer
-  </button>
+  <h3>
+    <a [routerLink]="['/films', film().id]">{{ film().titre }}</a>
+  </h3>
+  <p>Réalisateur : {{ film().realisateur ?? 'inconnu' }}</p>
+  <p>Sortie : {{ film().dateSortie ? (film().dateSortie | date: 'dd/MM/yyyy') : 'date inconnue' }}</p>
+  <button type="button" [disabled]="desactive()" (click)="onSupprimer()">Supprimer</button>
 </article>

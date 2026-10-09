@@ -45,7 +45,7 @@ public class FilmController {
         return acteurService.getActeursFilm(id, avecQuery);
     }
 
-    @PutMapping("/{filmId}/acteurs/{acteurId}")
+    @PostMapping("/{filmId}/acteurs/{acteurId}")
     public ResponseEntity<Void> associer(@PathVariable("filmId") Long filmId,
                                         @PathVariable("acteurId") Long acteurId) {
         acteurService.associerActeur(filmId, acteurId);

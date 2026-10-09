@@ -6,11 +6,10 @@ h3 {
   margin-top: 0;
 }
 
-button {
-  padding: 6px 12px;
-  cursor: pointer;
+p {
+  margin: 4px 0;
 }
 
-button:disabled {
-  cursor: wait;
+button {
+  margin-top: 8px;
 }
