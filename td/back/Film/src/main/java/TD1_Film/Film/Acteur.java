@@ -17,7 +17,6 @@ public class Acteur {
     private String nom;
     private String prenom;
 
-    // "acteurs" est le nom du champ dans la classe Film.
     @ManyToMany(mappedBy = "acteurs")
     private List<Film> films = new ArrayList<>();
 

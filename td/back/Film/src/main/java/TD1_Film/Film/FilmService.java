@@ -26,9 +26,9 @@ public class FilmService {
         return resultat;
     }
 
-    public FilmDto getFilm(Long id) {
+    public FilmDetailDto getFilm(Long id) {
         Film film = trouverFilm(id);
-        return mapper.toDto(film);
+        return mapper.toDetailDto(film);
     }
 
     private Film trouverFilm(Long id) {

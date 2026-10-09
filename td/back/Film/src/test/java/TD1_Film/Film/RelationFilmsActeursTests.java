@@ -37,12 +37,19 @@ class RelationFilmsActeursTests {
         assertEquals(1, acteurService.getFilmsActeur(acteur.getId(), false).size());
         assertEquals(film.getId(), acteurService.getFilmsActeur(acteur.getId(), true).get(0).getId());
 
+        FilmDetailDto detail = filmService.getFilm(film.getId());
+        assertEquals("Blade Runner", detail.getTitre());
+        assertEquals(1, detail.getActeurs().size());
+        assertEquals(acteur.getId(), detail.getActeurs().get(0).getId());
+        assertEquals("Ford", detail.getActeurs().get(0).getNom());
+
         acteurService.dissocierActeur(film.getId(), acteur.getId());
         acteurService.dissocierActeur(film.getId(), acteur.getId());
         rechargerDepuisLaBase();
 
         assertTrue(acteurService.getActeursFilm(film.getId(), false).isEmpty());
         assertTrue(acteurService.getFilmsActeur(acteur.getId(), true).isEmpty());
+        assertTrue(filmService.getFilm(film.getId()).getActeurs().isEmpty());
         assertTrue(filmRepository.existsById(film.getId()));
         assertTrue(acteurRepository.existsById(acteur.getId()));
     }

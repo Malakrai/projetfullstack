@@ -44,6 +44,9 @@ PUT {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs/{{nouvelActeur.
 ### 7. Acteurs du film par convention de nommage : 200
 GET {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs
 
+### Detail du film : 200 avec une liste acteurs contenant Harrison Ford
+GET {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}
+
 ### 8. Acteurs du film avec @Query : meme resultat
 GET {{baseUrl}}/films/{{nouveauFilm.response.body.$.id}}/acteurs?avecQuery=true
 

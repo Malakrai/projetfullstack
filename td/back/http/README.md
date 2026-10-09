@@ -6,8 +6,8 @@
 4. Cliquer sur **Send Request** pour chaque requete, dans l'ordre du fichier.
 
 Les identifiants sont recuperes dans les reponses de creation. Pour rejouer un
-scenario termine, recommencer a la premiere requete. `create-drop` recree les
-tables a chaque demarrage et les supprime a l'arret de l'application.
+scenario termine, recommencer a la premiere requete. `update` conserve les
+tables et les donnees PostgreSQL entre deux demarrages.
 
 ## Lire le code
 
@@ -16,8 +16,9 @@ tables a chaque demarrage et les supprime a l'arret de l'application.
 - Le repository lit et enregistre les entites dans la base.
 - Le mapper copie les champs entre une entite et un DTO.
 - `Film.acteurs` gere la table `film_acteur`; `Acteur.films` est l'autre sens.
-- Les DTO ne contiennent pas les relations. On les consulte avec les routes
-  `/films/{id}/acteurs` et `/acteurs/{id}/films`, sans boucle JSON.
+- `GET /films/{id}` renvoie un `FilmDetailDto` avec ses acteurs.
+- Les acteurs sont des `ActeurDto` sans films, pour eviter les boucles JSON.
+  Les routes `/films/{id}/acteurs` et `/acteurs/{id}/films` existent aussi.
 
 Par defaut, ces deux routes utilisent les methodes `findBy...` des repositories.
 Ajouter `?avecQuery=true` utilise la version avec `@Query` pour comparer.
@@ -25,6 +26,14 @@ Ajouter `?avecQuery=true` utilise la version avec `@Query` pour comparer.
 `WebConfig` autorise les frontends locaux sur les ports 5173, 4200 et 3000.
 Adapter `allowedOrigins` si le frontend utilise une autre adresse.
 
-Les tests se lancent avec `.\gradlew.bat test` dans `td/back/Film`.
-Ils utilisent H2, une base temporaire en memoire : PostgreSQL reste la base de
-l'application. Les tests H2 ne remplacent pas une verification sur PostgreSQL.
+Les tests utilisent une base PostgreSQL separee, `films-tests`.
+La creer une seule fois dans pgAdmin depuis le Query Tool de la base `postgres` :
+
+```sql
+CREATE DATABASE "films-tests";
+```
+
+Definir `DB_PASSWORD`, puis lancer `.\gradlew.bat test` dans `td/back/Film`.
+Par defaut, les tests se connectent a `localhost:5432` avec l'utilisateur
+`postgres`. `DB_HOST`, `DB_PORT` et `DB_USER` permettent de les modifier.
+Les tables de `films-tests` sont recreees puis supprimees par les tests.
