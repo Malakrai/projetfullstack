@@ -1,7 +1,10 @@
 ﻿<main>
   <h1>Bibliothèque de films</h1>
-  <p>Bienvenue dans l'application de gestion des films et des acteurs.</p>
 
-  <app-film-list />
-  <app-acteur-list />
+  <nav aria-label="Navigation principale">
+    <a routerLink="/films" routerLinkActive="actif" ariaCurrentWhenActive="page">Films</a>
+    <a routerLink="/acteurs" routerLinkActive="actif" ariaCurrentWhenActive="page">Acteurs</a>
+  </nav>
+
+  <router-outlet />
 </main>

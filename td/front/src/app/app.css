@@ -6,3 +6,23 @@
   font-family: Arial, sans-serif;
   line-height: 1.6;
 }
+
+nav {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+nav a {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #222;
+  text-decoration: none;
+}
+
+nav a.actif {
+  background: #174b7a;
+  border-color: #174b7a;
+  color: white;
+}

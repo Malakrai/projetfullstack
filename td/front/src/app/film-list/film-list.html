@@ -9,19 +9,15 @@
   @if (erreur()) {
     <p role="alert">{{ erreur() }}</p>
   } @else if (films(); as liste) {
-    <ul>
       @for (film of liste; track film.id) {
-        <li>
           <app-film-card
             [film]="film"
             [desactive]="suppressionEnCours()"
             (supprimer)="onSupprimer($event)"
           />
-        </li>
       } @empty {
-        <li>Aucun film enregistré.</li>
+        <p>Aucun film enregistré.</p>
       }
-    </ul>
   } @else {
     <p>Chargement des films...</p>
   }
