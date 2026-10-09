@@ -1,12 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { FilmList } from './film-list/film-list';
+import { ActeurList } from './acteur-list/acteur-list';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [FilmList, ActeurList],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('film-app');
-}
+export class App {}
