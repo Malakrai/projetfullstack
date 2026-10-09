@@ -98,6 +98,11 @@ Donc :
 - dans la page d'un film, on peut ajouter un acteur avec une liste déroulante (les acteurs déjà dans le film n'y apparaissent pas)
 - on peut aussi retirer un acteur du film
 
+**Rôles**
+- quand on ajoute un acteur à un film, on peut aussi écrire le personnage qu'il joue (ce n'est pas obligatoire)
+- le rôle s'affiche à côté de l'acteur dans la page du film, et on peut l'ajouter ou le modifier après coup
+- côté back, j'ai ajouté une entité `Role` (table `film_role`) qui garde le personnage pour chaque couple film / acteur
+
 Si l'API est éteinte ou renvoie une erreur, un message s'affiche à la place.
 
 ## Les routes de l'API utilisées
@@ -105,11 +110,12 @@ Si l'API est éteinte ou renvoie une erreur, un message s'affiche à la place.
 | Méthode | URL (côté back) | À quoi ça sert |
 |---|---|---|
 | GET | `/films` | liste des films |
-| GET | `/films/{id}` | un film avec ses acteurs |
+| GET | `/films/{id}` | un film avec ses acteurs et leurs rôles |
 | POST | `/films` | ajouter un film |
 | PUT | `/films/{id}` | modifier un film |
 | DELETE | `/films/{id}` | supprimer un film |
-| POST | `/films/{id}/acteurs/{acteurId}` | ajouter un acteur à un film |
+| POST | `/films/{id}/acteurs/{acteurId}` | ajouter un acteur à un film (on peut envoyer `{ "personnage": "..." }`, c'est facultatif) |
+| PUT | `/films/{id}/acteurs/{acteurId}/role` | modifier le personnage joué (si on envoie un personnage vide, le rôle est effacé) |
 | DELETE | `/films/{id}/acteurs/{acteurId}` | retirer un acteur d'un film |
 | GET | `/acteurs` | liste de tous les acteurs |
 | GET | `/acteurs/page?page=0&taille=5&tri=nom&sens=asc` | acteurs par page, triés (`tri` peut être `nom`, `prenom` ou `id`) |
@@ -124,7 +130,8 @@ front/src/app/
 ├── film.service.ts, acteur.service.ts              tous les appels HTTP sont ici
 ├── film-list/       la liste des films + la recherche
 ├── film-card/       la carte d'un film (reçoit le film en input, envoie "supprimer" en output)
-├── film-detail/     le détail d'un film + gestion des acteurs
+├── film-detail/     le détail d'un film (c'est lui qui appelle l'API)
+├── film-acteurs/    la partie "acteurs et rôles" du détail d'un film (inputs + outputs, n'appelle pas l'API)
 ├── film-form/       le formulaire d'ajout / de modification
 ├── acteur-list/     la liste des acteurs (pagination + tri)
 ├── acteur-detail/   le détail d'un acteur et ses films
