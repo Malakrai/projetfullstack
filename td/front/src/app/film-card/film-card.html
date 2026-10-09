@@ -1,4 +1,7 @@
-<article>
+<article [ngClass]="{ ancien: estAncien() }">
+  @if (estAncien()) {
+    <p class="mention">Film ancien · sorti avant 2000</p>
+  }
   <h3>
     <a [routerLink]="['/films', film().id]">{{ film().titre }}</a>
   </h3>

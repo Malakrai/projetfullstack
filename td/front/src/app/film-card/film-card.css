@@ -1,5 +1,21 @@
 article {
-  margin: 24px 0;
+  margin: 16px 0;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+article.ancien {
+  border-left: 6px solid #8b6b3d;
+  background: #f6f0e4;
+}
+
+.mention {
+  margin: 0 0 6px;
+  color: #8b6b3d;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 h3 {
