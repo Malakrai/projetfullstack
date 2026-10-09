@@ -21,3 +21,7 @@ Thumbs.db
 
 # Bundle de distribution
 *.bundle
+
+# Journaux de crash de la JVM
+hs_err_pid*.log
+replay_pid*.log
