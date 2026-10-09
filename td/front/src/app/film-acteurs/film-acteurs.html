@@ -1,0 +1,43 @@
+<h3>Acteurs</h3>
+<ul>
+  @for (acteur of acteurs(); track acteur.id) {
+    <li>
+      <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.prenom }} {{ acteur.nom }}</a>
+      @if (enEdition() === acteur.id) {
+        <input
+          [attr.aria-label]="'Personnage joué par ' + acteur.prenom + ' ' + acteur.nom"
+          placeholder="Personnage"
+          [(ngModel)]="personnageEdite"
+        />
+        <button type="button" [disabled]="desactive()" (click)="validerEdition(acteur)">OK</button>
+        <button type="button" (click)="enEdition.set(null)">Annuler</button>
+      } @else {
+        @if (personnageDe(acteur)) {
+          — dans le rôle de <strong>{{ personnageDe(acteur) }}</strong>
+        }
+        <button type="button" [disabled]="desactive()" (click)="commencerEdition(acteur)">
+          {{ personnageDe(acteur) ? 'Modifier le rôle' : 'Ajouter un rôle' }}
+        </button>
+        <button type="button" class="danger" [disabled]="desactive()" (click)="dissocier.emit(acteur)">
+          Dissocier
+        </button>
+      }
+    </li>
+  } @empty {
+    <li>Aucun acteur associé à ce film.</li>
+  }
+</ul>
+
+<p>
+  <label for="acteur">Ajouter un acteur : </label>
+  <select id="acteur" [(ngModel)]="acteurSelectionne">
+    <option [ngValue]="null">-- Choisir un acteur --</option>
+    @for (a of disponibles(); track a.id) {
+      <option [ngValue]="a.id">{{ a.prenom }} {{ a.nom }}</option>
+    }
+  </select>
+  <input aria-label="Personnage joué" placeholder="Personnage (facultatif)" [(ngModel)]="personnage" />
+  <button type="button" [disabled]="acteurSelectionne() === null || desactive()" (click)="onAssocier()">
+    Associer
+  </button>
+</p>

@@ -1,5 +1,6 @@
 package TD1_Film.Film;
 
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,10 +11,10 @@ public class FilmMapper {
         this.acteurMapper = acteurMapper;
     }
 
-    public FilmDetailDto toDetailDto(Film film) {
+    public FilmDetailDto toDetailDto(Film film, List<RoleDto> roles) {
         return new FilmDetailDto(film.getId(), film.getTitre(), film.getRealisateur(),
                 film.getDateSortie(), film.getGenre(),
-                film.getActeurs().stream().map(acteurMapper::toDto).toList());
+                film.getActeurs().stream().map(acteurMapper::toDto).toList(), roles);
     }
 
     public FilmDto toDto(Film film) {

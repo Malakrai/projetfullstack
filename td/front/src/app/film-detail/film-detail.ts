@@ -1,17 +1,17 @@
 import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { FilmService } from '../film.service';
 import { ActeurService } from '../acteur.service';
 import { Acteur } from '../acteur.model';
+import { FilmActeurs, SaisieRole } from '../film-acteurs/film-acteurs';
 
 @Component({
   selector: 'app-film-detail',
-  imports: [DatePipe, FormsModule, RouterLink],
+  imports: [DatePipe, FilmActeurs, RouterLink],
   templateUrl: './film-detail.html',
 })
 export class FilmDetail {
@@ -26,7 +26,6 @@ export class FilmDetail {
   erreur = signal('');
   erreurAction = signal('');
   actionEnCours = signal(false);
-  acteurSelectionne = signal<number | null>(null);
 
   film = toSignal(
     toObservable(computed(() => ({ id: this.filmId(), n: this.rechargement() }))).pipe(
@@ -65,15 +64,16 @@ export class FilmDetail {
     this.rechargement.update(n => n + 1);
   }
 
-  associer() {
-    const acteurId = this.acteurSelectionne();
-    if (acteurId === null) {
-      return;
-    }
-    this.executer(this.service.associerActeur(this.filmId(), acteurId), 'Association impossible.', () => {
-      this.acteurSelectionne.set(null);
-      this.recharger();
-    });
+  associer({ acteurId, personnage }: SaisieRole) {
+    this.executer(this.service.associerActeur(this.filmId(), acteurId, personnage), 'Association impossible.', () =>
+      this.recharger(),
+    );
+  }
+
+  modifierRole({ acteurId, personnage }: SaisieRole) {
+    this.executer(this.service.modifierRole(this.filmId(), acteurId, personnage), 'Modification du rôle impossible.', () =>
+      this.recharger(),
+    );
   }
 
   dissocier(acteur: Acteur) {

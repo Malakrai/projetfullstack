@@ -13,30 +13,15 @@
       <p role="alert">{{ erreurAction() }}</p>
     }
 
-    <h3>Acteurs</h3>
-    <ul>
-      @for (acteur of film.acteurs; track acteur.id) {
-        <li>
-          <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.prenom }} {{ acteur.nom }}</a>
-          <button type="button" class="danger" [disabled]="actionEnCours()" (click)="dissocier(acteur)">Dissocier</button>
-        </li>
-      } @empty {
-        <li>Aucun acteur associé à ce film.</li>
-      }
-    </ul>
-
-    <p>
-      <label for="acteur">Ajouter un acteur : </label>
-      <select id="acteur" [(ngModel)]="acteurSelectionne">
-        <option [ngValue]="null">-- Choisir un acteur --</option>
-        @for (a of acteursDisponibles(); track a.id) {
-          <option [ngValue]="a.id">{{ a.prenom }} {{ a.nom }}</option>
-        }
-      </select>
-      <button type="button" [disabled]="acteurSelectionne() === null || actionEnCours()" (click)="associer()">
-        Associer
-      </button>
-    </p>
+    <app-film-acteurs
+      [acteurs]="film.acteurs ?? []"
+      [roles]="film.roles ?? []"
+      [disponibles]="acteursDisponibles()"
+      [desactive]="actionEnCours()"
+      (associer)="associer($event)"
+      (dissocier)="dissocier($event)"
+      (modifierRole)="modifierRole($event)"
+    />
 
     <p>
       <a [routerLink]="['/films', film.id, 'modifier']">Modifier</a>

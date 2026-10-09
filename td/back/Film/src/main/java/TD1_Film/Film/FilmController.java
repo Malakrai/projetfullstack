@@ -47,8 +47,17 @@ public class FilmController {
 
     @PostMapping("/{filmId}/acteurs/{acteurId}")
     public ResponseEntity<Void> associer(@PathVariable("filmId") Long filmId,
-                                        @PathVariable("acteurId") Long acteurId) {
-        acteurService.associerActeur(filmId, acteurId);
+                                        @PathVariable("acteurId") Long acteurId,
+                                        @RequestBody(required = false) RoleSaisieDto role) {
+        acteurService.associerActeur(filmId, acteurId, role == null ? null : role.personnage());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{filmId}/acteurs/{acteurId}/role")
+    public ResponseEntity<Void> modifierRole(@PathVariable("filmId") Long filmId,
+                                            @PathVariable("acteurId") Long acteurId,
+                                            @RequestBody RoleSaisieDto role) {
+        acteurService.modifierRole(filmId, acteurId, role.personnage());
         return ResponseEntity.noContent().build();
     }
 

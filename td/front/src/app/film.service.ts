@@ -34,8 +34,12 @@ export class FilmService {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
 
-  associerActeur(filmId: number, acteurId: number) {
-    return this.http.post<void>(`${this.url}/${filmId}/acteurs/${acteurId}`, null);
+  associerActeur(filmId: number, acteurId: number, personnage = '') {
+    return this.http.post<void>(`${this.url}/${filmId}/acteurs/${acteurId}`, { personnage });
+  }
+
+  modifierRole(filmId: number, acteurId: number, personnage: string) {
+    return this.http.put<void>(`${this.url}/${filmId}/acteurs/${acteurId}/role`, { personnage });
   }
 
   dissocierActeur(filmId: number, acteurId: number) {

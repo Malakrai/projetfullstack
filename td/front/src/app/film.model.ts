@@ -4,6 +4,11 @@ export const GENRES = ['ACTION', 'COMEDIE', 'DRAME', 'HORREUR', 'SCIENCE_FICTION
 
 export type Genre = (typeof GENRES)[number];
 
+export interface RoleFilm {
+  acteurId: number;
+  personnage: string;
+}
+
 export interface Film {
   id: number;
   titre: string;
@@ -11,4 +16,5 @@ export interface Film {
   dateSortie: string | null;
   genre: Genre | null;
   acteurs?: Acteur[];
+  roles?: RoleFilm[];
 }

@@ -12,10 +12,12 @@ public class FilmService {
 
     private final FilmRepository repository;
     private final FilmMapper mapper;
+    private final RoleRepository roleRepository;
 
-    public FilmService(FilmRepository repository, FilmMapper mapper) {
+    public FilmService(FilmRepository repository, FilmMapper mapper, RoleRepository roleRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.roleRepository = roleRepository;
     }
 
     public List<FilmDto> getFilms() {
@@ -28,7 +30,11 @@ public class FilmService {
 
     public FilmDetailDto getFilm(Long id) {
         Film film = trouverFilm(id);
-        return mapper.toDetailDto(film);
+        List<RoleDto> roles = new ArrayList<>();
+        for (Role role : roleRepository.findByFilmId(id)) {
+            roles.add(new RoleDto(role.getActeur().getId(), role.getPersonnage()));
+        }
+        return mapper.toDetailDto(film, roles);
     }
 
     private Film trouverFilm(Long id) {
@@ -54,6 +60,7 @@ public class FilmService {
 
     public void supprimerFilm(Long id) {
         Film film = trouverFilm(id);
+        roleRepository.deleteByFilmId(id);
         // On retire les liens sans supprimer les acteurs.
         for (Acteur acteur : new ArrayList<>(film.getActeurs())) {
             film.retirerActeur(acteur);

@@ -7,8 +7,10 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 // Une transaction regroupe les lectures et les modifications de la relation.
@@ -18,13 +20,15 @@ public class ActeurService {
     private final FilmRepository filmRepository;
     private final ActeurMapper mapper;
     private final FilmMapper filmMapper;
+    private final RoleRepository roleRepository;
 
     public ActeurService(ActeurRepository repository, FilmRepository filmRepository,
-                         ActeurMapper mapper, FilmMapper filmMapper) {
+                         ActeurMapper mapper, FilmMapper filmMapper, RoleRepository roleRepository) {
         this.repository = repository;
         this.filmRepository = filmRepository;
         this.mapper = mapper;
         this.filmMapper = filmMapper;
+        this.roleRepository = roleRepository;
     }
 
     private Acteur trouverActeur(Long id) {
@@ -88,6 +92,7 @@ public class ActeurService {
 
     public void supprimerActeur(Long id) {
         Acteur acteur = trouverActeur(id);
+        roleRepository.deleteByActeurId(id);
         // Une copie permet de parcourir les films tout en retirant les liens.
         for (Film film : new ArrayList<>(acteur.getFilms())) {
             film.retirerActeur(acteur);
@@ -97,15 +102,42 @@ public class ActeurService {
     }
 
     public void associerActeur(Long filmId, Long acteurId) {
+        associerActeur(filmId, acteurId, null);
+    }
+
+    public void associerActeur(Long filmId, Long acteurId, String personnage) {
         Film film = trouverFilm(filmId);
         Acteur acteur = trouverActeur(acteurId);
         film.ajouterActeur(acteur);
         filmRepository.save(film);
+        enregistrerRole(film, acteur, personnage);
+    }
+
+    public void modifierRole(Long filmId, Long acteurId, String personnage) {
+        Film film = trouverFilm(filmId);
+        Acteur acteur = trouverActeur(acteurId);
+        if (!film.getActeurs().contains(acteur)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "L'acteur " + acteurId + " ne joue pas dans le film " + filmId);
+        }
+        enregistrerRole(film, acteur, personnage);
+    }
+
+    private void enregistrerRole(Film film, Acteur acteur, String personnage) {
+        Optional<Role> existant = roleRepository.findByFilmIdAndActeurId(film.getId(), acteur.getId());
+        if (personnage == null || personnage.isBlank()) {
+            existant.ifPresent(roleRepository::delete);
+            return;
+        }
+        Role role = existant.orElseGet(() -> new Role(film, acteur, null));
+        role.setPersonnage(personnage.trim());
+        roleRepository.save(role);
     }
 
     public void dissocierActeur(Long filmId, Long acteurId) {
         Film film = trouverFilm(filmId);
         Acteur acteur = trouverActeur(acteurId);
+        roleRepository.deleteByFilmIdAndActeurId(filmId, acteurId);
         film.retirerActeur(acteur);
         filmRepository.save(film);
     }
