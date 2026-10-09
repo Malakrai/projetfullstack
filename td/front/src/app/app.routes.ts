@@ -8,7 +8,7 @@ import { NotFound } from './not-found/not-found';
 
 export const routes: Routes = [
   { path: 'films', component: FilmList },
-  { path: 'films/nouveau', component: FilmForm }, // avant films/:id
+  { path: 'films/nouveau', component: FilmForm },
   { path: 'films/:id/modifier', component: FilmForm },
   { path: 'films/:id', component: FilmDetail },
   { path: 'acteurs', component: ActeurList },

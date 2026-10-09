@@ -1,4 +1,31 @@
 <section>
-  <h2>Détail du film</h2>
-  <p>Cette page affichera le film, ses acteurs et les actions disponibles.</p>
+  <a routerLink="/films">← Retour à la liste</a>
+
+  @if (erreur()) {
+    <p role="alert">{{ erreur() }}</p>
+  } @else if (film(); as film) {
+    <h2>{{ film.titre }}</h2>
+    <p>Réalisateur : {{ film.realisateur ?? 'inconnu' }}</p>
+    <p>Sortie : {{ film.dateSortie ? (film.dateSortie | date: 'd MMMM y') : 'date inconnue' }}</p>
+    <p>Genre : {{ film.genre ?? 'non renseigné' }}</p>
+
+    <h3>Acteurs</h3>
+    <ul>
+      @for (acteur of film.acteurs; track acteur.id) {
+        <li>
+          <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.prenom }} {{ acteur.nom }}</a>
+        </li>
+      } @empty {
+        <li>Aucun acteur associé à ce film.</li>
+      }
+    </ul>
+
+    @if (erreurAction()) {
+      <p role="alert">{{ erreurAction() }}</p>
+    }
+    <a [routerLink]="['/films', film.id, 'modifier']">Modifier</a>
+    <button type="button" [disabled]="actionEnCours()" (click)="onSupprimer()">Supprimer</button>
+  } @else {
+    <p>Chargement du film...</p>
+  }
 </section>
