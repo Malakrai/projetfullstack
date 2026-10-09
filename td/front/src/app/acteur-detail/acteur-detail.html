@@ -1,4 +1,25 @@
 <section>
-  <h2>Détail de l’acteur</h2>
-  <p>Cette page affichera l’acteur et les films auxquels il a participé.</p>
+  <a routerLink="/acteurs">← Retour à la liste des acteurs</a>
+
+  @if (erreur()) {
+    <p role="alert">{{ erreur() }}</p>
+  } @else if (donnees(); as d) {
+    <h2>{{ d.acteur.prenom }} {{ d.acteur.nom }}</h2>
+
+    <h3>Films</h3>
+    <ul>
+      @for (film of d.films; track film.id) {
+        <li>
+          <a [routerLink]="['/films', film.id]">{{ film.titre }}</a>
+          @if (film.dateSortie) {
+            ({{ film.dateSortie | date: 'yyyy' }})
+          }
+        </li>
+      } @empty {
+        <li>Cet acteur n’a participé à aucun film.</li>
+      }
+    </ul>
+  } @else {
+    <p>Chargement de l’acteur...</p>
+  }
 </section>

@@ -1,18 +1,22 @@
 import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, of, switchMap } from 'rxjs';
+import { catchError, Observable, of, switchMap } from 'rxjs';
 import { FilmService } from '../film.service';
+import { ActeurService } from '../acteur.service';
+import { Acteur } from '../acteur.model';
 
 @Component({
   selector: 'app-film-detail',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, FormsModule, RouterLink],
   templateUrl: './film-detail.html',
 })
 export class FilmDetail {
   private service = inject(FilmService);
+  private acteurService = inject(ActeurService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
 
@@ -22,6 +26,7 @@ export class FilmDetail {
   erreur = signal('');
   erreurAction = signal('');
   actionEnCours = signal(false);
+  acteurSelectionne = signal<number | null>(null);
 
   film = toSignal(
     toObservable(computed(() => ({ id: this.filmId(), n: this.rechargement() }))).pipe(
@@ -41,22 +46,65 @@ export class FilmDetail {
     ),
   );
 
+  private tousLesActeurs = toSignal(
+    this.acteurService.getAll().pipe(
+      catchError(() => {
+        this.erreurAction.set('Impossible de charger la liste des acteurs.');
+        return of([] as Acteur[]);
+      }),
+    ),
+    { initialValue: [] as Acteur[] },
+  );
+
+  acteursDisponibles = computed(() => {
+    const associes = this.film()?.acteurs?.map(a => a.id) ?? [];
+    return this.tousLesActeurs().filter(a => !associes.includes(a.id));
+  });
+
   recharger() {
     this.rechargement.update(n => n + 1);
   }
 
-  onSupprimer() {
-    const film = this.film();
-    if (!film || this.actionEnCours() || !window.confirm(`Supprimer le film « ${film.titre} » ?`)) {
+  associer() {
+    const acteurId = this.acteurSelectionne();
+    if (acteurId === null) {
       return;
     }
+    this.executer(this.service.associerActeur(this.filmId(), acteurId), 'Association impossible.', () => {
+      this.acteurSelectionne.set(null);
+      this.recharger();
+    });
+  }
 
+  dissocier(acteur: Acteur) {
+    this.executer(this.service.dissocierActeur(this.filmId(), acteur.id), 'Dissociation impossible.', () =>
+      this.recharger(),
+    );
+  }
+
+  onSupprimer() {
+    const film = this.film();
+    if (!film || !window.confirm(`Supprimer le film « ${film.titre} » ?`)) {
+      return;
+    }
+    this.executer(this.service.supprimer(film.id), 'Suppression impossible.', () =>
+      this.router.navigate(['/films']),
+    );
+  }
+
+  private executer(requete: Observable<void>, messageErreur: string, suite: () => void) {
+    if (this.actionEnCours()) {
+      return;
+    }
     this.erreurAction.set('');
     this.actionEnCours.set(true);
-    this.service.supprimer(film.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => this.router.navigate(['/films']),
+    requete.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.actionEnCours.set(false);
+        suite();
+      },
       error: () => {
-        this.erreurAction.set('Suppression impossible.');
+        this.erreurAction.set(messageErreur);
         this.actionEnCours.set(false);
       },
     });

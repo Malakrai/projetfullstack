@@ -1,4 +1,37 @@
 <section>
-  <h2>Formulaire de film</h2>
-  <p>Ce formulaire servira à créer un film ou à modifier un film existant.</p>
+  <h2>{{ enEdition() ? 'Modifier le film' : 'Nouveau film' }}</h2>
+
+  @if (erreur()) {
+    <p role="alert">{{ erreur() }}</p>
+  }
+
+  @if (chargement()) {
+    <p>Chargement du film...</p>
+  } @else {
+    <form (ngSubmit)="enregistrer()">
+      <p>
+        <label for="titre">Titre *</label><br />
+        <input id="titre" name="titre" required [(ngModel)]="titre" />
+      </p>
+      <p>
+        <label for="realisateur">Réalisateur</label><br />
+        <input id="realisateur" name="realisateur" [(ngModel)]="realisateur" />
+      </p>
+      <p>
+        <label for="dateSortie">Date de sortie</label><br />
+        <input id="dateSortie" name="dateSortie" type="date" [(ngModel)]="dateSortie" />
+      </p>
+      <p>
+        <label for="genre">Genre</label><br />
+        <select id="genre" name="genre" [(ngModel)]="genre">
+          <option [ngValue]="null">-- Choisir --</option>
+          @for (g of genres; track g) {
+            <option [ngValue]="g">{{ g }}</option>
+          }
+        </select>
+      </p>
+      <button type="submit" [disabled]="!titre().trim() || envoiEnCours()">Enregistrer</button>
+      <a [routerLink]="enEdition() ? ['/films', id()] : ['/films']">Annuler</a>
+    </form>
+  }
 </section>

@@ -1,6 +1,8 @@
 import { Acteur } from './acteur.model';
 
-export type Genre = 'ACTION' | 'COMEDIE' | 'DRAME' | 'HORREUR' | 'SCIENCE_FICTION';
+export const GENRES = ['ACTION', 'COMEDIE', 'DRAME', 'HORREUR', 'SCIENCE_FICTION'] as const;
+
+export type Genre = (typeof GENRES)[number];
 
 export interface Film {
   id: number;
