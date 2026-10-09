@@ -1,0 +1,7 @@
+<article>
+  <h3>{{ film().titre }}</h3>
+  <p>Réalisateur : {{ film().realisateur }}</p>
+  <button type="button" [disabled]="desactive()" (click)="onSupprimer()">
+    Supprimer
+  </button>
+</article>

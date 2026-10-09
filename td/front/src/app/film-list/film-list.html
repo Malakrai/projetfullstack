@@ -1,4 +1,28 @@
 <section>
   <h2>Liste des films</h2>
-  <p>La liste des films sera chargée depuis l’API.</p>
+  @if (erreurSuppression()) {
+    <p role="alert">{{ erreurSuppression() }}</p>
+  }
+  @if (suppressionEnCours()) {
+    <p role="status">Suppression en cours...</p>
+  }
+  @if (erreur()) {
+    <p role="alert">{{ erreur() }}</p>
+  } @else if (films(); as liste) {
+    <ul>
+      @for (film of liste; track film.id) {
+        <li>
+          <app-film-card
+            [film]="film"
+            [desactive]="suppressionEnCours()"
+            (supprimer)="onSupprimer($event)"
+          />
+        </li>
+      } @empty {
+        <li>Aucun film enregistré.</li>
+      }
+    </ul>
+  } @else {
+    <p>Chargement des films...</p>
+  }
 </section>
